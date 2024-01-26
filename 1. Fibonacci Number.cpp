@@ -10,7 +10,7 @@ int FiboNum(int n){
     return FiboNum(n-1)+FiboNum(n-2);
 }
 
-// Dynamic Programming : Recursion and Memoization : Bottom-up Approach : 
+// Dynamic Programming : Recursion and Memoization : Top-down Approach : 
 // Time complexity : O(n)
 // Space complexity : O(2*n) = By recursive stack as well as the dp array/vector.
 int FiboNum2(int n, vector<int> &v){
@@ -22,7 +22,7 @@ int FiboNum2(int n, vector<int> &v){
     return v[n] = FiboNum2(n-1,v) + FiboNum2(n-2,v);
 }
 
-// Dynamic Programming : Tabulation : Top-down Approach :  
+// Dynamic Programming : Tabulation : Bottom-up Approach :  
 // Time complexity : O(n)
 // Space complexity : O(n) = By the dp array/vector.
 int FiboNum1(int n){
@@ -40,8 +40,8 @@ int FiboNum1(int n){
 // Time complexity : O(n)
 // Space Complexity : O(1)
 int FiboNum3(int n){
-    static int prev1 = 0;
-    static int prev2 = 1;
+    int prev1 = 0;
+    int prev2 = 1;
     if(n==0){
         return 0;
     }

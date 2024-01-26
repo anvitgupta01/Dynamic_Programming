@@ -1,102 +1,48 @@
-#include <bits/stdc++.h>
+// https://www.codingninjas.com/studio/problems/number-of-ways_3755252
+
+#include <iostream>
+#include <vector>
 using namespace std;
 
-// Recursion :
-int distinctWays(vector<int> v, int sum)
+// Memoization
+int solve(vector<int> &num, int tar, vector<int> &dp)
 {
-    if (sum < 0)
-    {
-        return 0;
-    }
-    if (sum == 0)
-    {
+    if (tar == 0)
         return 1;
-    }
+    if (tar < 0)
+        return 0;
+    if (dp[tar] != -1)
+        return dp[tar];
+
     int ans = 0;
-    for (int i = 0; i < v.size(); i++)
+    for (int i = 0; i < num.size(); i++)
     {
-        ans += distinctWays(v, sum - v[i]);
+        ans += solve(num, tar - num[i], dp);
     }
+    return dp[tar] = ans;
+}
+int findWays(vector<int> &num, int tar)
+{
+    vector<int> dp(tar + 1, -1);
+    int ans = solve(num, tar, dp);
     return ans;
 }
 
-// Recursin + Memoization :
-// dp[i] denotes number of ways in which sum = i be created using v:
-int solve(vector<int> v, int sum, vector<int> &dp)
+// Tabulation: Good approach : See that dp[tar]=ans is made after summing up all the i's... hence i loop will be the inner loop...
+int findWays(vector<int> &num, int tar)
 {
-    if (sum < 0)
-    {
-        return 0;
-    }
-    if (sum == 0)
-    {
-        return 1;
-    }
-
-    if (dp[sum] != -1)
-    {
-        return dp[sum];
-    }
-
-    int ans = 0;
-    for (int i = 0; i < v.size(); i++)
-    {
-        ans += solve(v, sum - v[i], dp);
-    }
-    dp[sum] = ans;
-    return dp[sum];
-}
-int distinctWays1(vector<int> v, int sum)
-{
-    vector<int> dp(sum + 1, -1);
+    vector<int> dp(tar + 1, 0);
     dp[0] = 1;
-    return solve(v, sum, dp);
-}
+    int n = num.size();
 
-// Tabulation :
-int distinctWays2(vector<int> v, int sum)
-{
-    if (sum < 0)
+    for (int t = 1; t <= tar; t++)
     {
-        return 0;
-    }
-
-    vector<int> dp(sum + 1, 0);
-    dp[0] = 1;
-
-    for (int i = 1; i <= sum; i++)
-    {
-        for (int j = 0; j < v.size(); j++)
+        for (int i = 0; i < n; i++)
         {
-            if (i >= v[j])
-            {
-                dp[i] += dp[i - v[j]];
-            }
+            if (t >= num[i])
+                dp[t] += dp[t - num[i]];
         }
     }
-    return dp[sum];
-}
 
-int main()
-{
-    cout << "Enter the number of distinct numbers given " << endl;
-    int n;
-    cin >> n;
-
-    vector<int> v(n, -1);
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        cin >> x;
-        v[i] = x;
-    }
-
-    cout << "Enter the sum required " << endl;
-    int sum;
-    cin >> sum;
-
-    cout << "The different number of ways will be " << distinctWays(v, sum) << endl;
-    cout << "The different number of ways will be " << distinctWays1(v, sum) << endl;
-    cout << "The different number of ways will be " << distinctWays2(v, sum) << endl;
-    return 0;
+    return dp[tar];
 }

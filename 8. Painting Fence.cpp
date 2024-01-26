@@ -1,26 +1,27 @@
-#include <bits/stdc++.h>
+// https://www.geeksforgeeks.org/problems/painting-the-fence3727/1
+
+#include <iostream>
 using namespace std;
 
-int Ways(int n,int k){
-    if(n==0){
-        return 0;
+typedef long long ll;
+
+// Using const int will give wrong ans...
+const long long mod = 1000000007;
+class Solution
+{
+public:
+    long long countWays(int n, int k)
+    {
+        ll prev1 = k;
+        ll prev2 = ((k % mod) * (k % mod)) % mod;
+        if (n == 1)
+            return k;
+        for (int i = 3; i <= n; i++)
+        {
+            ll temp = ((k - 1) % mod * (prev1 + prev2)) % mod;
+            prev1 = prev2 % mod;
+            prev2 = temp;
+        }
+        return prev2 % mod;
     }
-    int prev1 = k; // for n = 1;
-    int prev2 = (k*k); // for n = 2;
-
-    for(int i=3;i<=n;i++){
-        int ans = (k-1) * (prev1 + prev2);
-        prev1 = prev2;
-        prev2 = ans;
-    }
-    return prev2;
-}
-
-int main(){
-    cout<<"Enter the number of posts and colours available"<<endl;
-    int n,k;
-    cin>>n>>k;
-
-    cout<<"Number of ways in which colour can be done "<<Ways(n,k)<<endl;
-    return 0;
-}
+};

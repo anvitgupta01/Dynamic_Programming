@@ -1,56 +1,25 @@
-#include <bits/stdc++.h>
+// https://www.geeksforgeeks.org/problems/dearrangement-of-balls0918/1
+
+#include <iostream>
 using namespace std;
+typedef long long ll;
 
-#define ll long long 
-#define N 10e9+7
+// F(n) = (F(n-1)+F(n-2))*(n-1)
+long int disarrange(int N)
+{
+    if (N == 1 || N == 2)
+        return N - 1;
 
-// Recursion approach : 
-ll No_Of_Dearrange(int n){
-    if(n==0 || n==1){
-        return 0;
-    }
-    bool even = true;
-    if(n%2 != 0){
-        even = false;
-    }
-    if(even){
-        return n*No_Of_Dearrange(n-1) + 1;
-    }
-    return n*No_Of_Dearrange(n-1) - 1;
-}
+    ll prev1 = 0;
+    ll prev2 = 1;
+    const int mod = 1000000007;
 
-// Alternate recursion : D(n) = (n-1)* (D(n-1) + D(n-2)) : Combining even and odd relations;
-ll No_Of_Dearrange1(int n){
-    if(n==0 || n==1){
-        return 0;
+    for (int i = 3; i <= N; i++)
+    {
+        ll temp = (((prev1 + prev2) % mod) * (i - 1)) % mod;
+        prev1 = prev2 % mod;
+        prev2 = temp;
     }
-    if(n==2){
-        return 1;
-    }
-    return (n-1) * (No_Of_Dearrange(n-1) + No_Of_Dearrange(n-2));
-}
 
-// Dynamic Programming : Space Optimised Solution :
-ll No_Of_Dearrange2(int n){
-    if(n==0){
-        return 0;
-    }
-    int prev1 = 0;
-    int prev2 = 1;
-    for(int i=3;i<=n;i++){
-        int ans = (i-1) * (prev1 + prev2);
-        prev1 = prev2;
-        prev2 = ans;
-    }
-    return prev2;
-} 
-
-
-int main(){
-    cout<<"Enter the number of elements "<<endl;
-    int n;cin>>n;
-    cout<<"Number of derarrangements are "<<No_Of_Dearrange(n)<<endl;
-    cout<<"Number of derarrangements are "<<No_Of_Dearrange1(n)<<endl;
-    cout<<"Number of derarrangements are "<<No_Of_Dearrange2(n)<<endl;
-    return 0;
+    return prev2 % mod;
 }
